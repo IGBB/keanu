@@ -1,7 +1,7 @@
 import argparse
 import sys
 
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(description="A tool to format BLAST qseqid/staxid files into Keanu's input")
 parser.add_argument("-in", "--input", help="BLAST query/taxon data")
 parser.add_argument("-out", "--output", help="Output filename")
 
@@ -28,5 +28,5 @@ with open(args.output, 'w') as output_file:
         taxid_counts = counts[each]
         line=each+"\t"
         for taxid in taxid_counts:
-            line+=taxid+" "+str(taxid_counts[taxid])+", "
+            line+=taxid+" ["+str(taxid_counts[taxid])+"], "
         output_file.write(line.strip(" ,")+"\n")
