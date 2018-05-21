@@ -46,7 +46,7 @@ class Taxon:
 
 # Taxonomy database
 
-# taxonomy = {}
+taxonomy = {}
 
 with open(args.names) as names_file:
 	for line in names_file:
