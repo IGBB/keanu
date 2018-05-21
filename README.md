@@ -1,6 +1,8 @@
 # keanu
 A tool for viewing the contents of metagenomic samples
 
+<img src="https://github.com/IGBB/keanu/blob/master/logo.png" alt="Keanu Logo" width="200" height="200">
+
 ## Files in this repository
 * format_input.py: takes a file that contains a single BLAST query and taxon ID per line and formats it correctly as input for Keanu
   * format is `contig_query_name  taxonID_1 [counts], taxonID_2 [count], ...`
