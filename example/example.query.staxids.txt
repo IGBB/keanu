@@ -1,0 +1,4 @@
+cat	9685
+homo	9606
+homo	63221
+sun-tailed_monkey	147650
