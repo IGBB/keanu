@@ -124,6 +124,7 @@ class Graph:
 
 tree = Graph()
 merged = {}
+deleted = []
 
 with open(args.database) as taxa_data_file:
     for line in taxa_data_file:
@@ -143,6 +144,7 @@ with open(args.merged_deleted_database) as deleted_data_file:
         data = line.strip("\n").split("\t")
         if len(data) == 1:
             try:
+                deleted.append(int(data[0]))
                 del tree.vertices[int(data[0])]
             except:
                 pass
@@ -179,8 +181,15 @@ with open(args.input) as blast_taxon_coverage_file:
             each = parents[i]
             if each in merged:
                 each = merged[each]
-            taxon = tree.vertices[each]
-            parents.append(taxon.source)
+            try:
+                taxon = tree.vertices[each]
+                parents.append(taxon.source)
+            except:
+                if each in deleted:
+                    sys.stderr.write("Keanu has encountered a deleted taxon ID ("+str(each)+") in the BLAST results.\n")
+                else:
+                    sys.stderr.write("Keanu has encountered a taxon ID ("+str(each)+") in the BLAST results that is not in the taxonomy database or merged/deleted database.\n")
+                    sys.exit()
             i += 1
         parent_counts = Counter(parents)
         
