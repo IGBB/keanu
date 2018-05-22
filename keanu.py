@@ -186,10 +186,9 @@ with open(args.input) as blast_taxon_coverage_file:
                 parents.append(taxon.source)
             except:
                 if each in deleted:
-                    sys.stderr.write("Keanu has encountered a deleted taxon ID ("+str(each)+") in the BLAST results.\n")
+                    sys.stderr.write("WARNING: Keanu has encountered a deleted taxon ID ("+str(each)+") in the BLAST results.\n")
                 else:
-                    sys.stderr.write("Keanu has encountered a taxon ID ("+str(each)+") in the BLAST results that is not in the taxonomy database or merged/deleted database.\n")
-                    sys.exit()
+                    sys.stderr.write("WARNING: Keanu has encountered a taxon ID ("+str(each)+") in the BLAST results that is not in the taxonomy database or merged/deleted database.\n")
             i += 1
         parent_counts = Counter(parents)
         
@@ -217,11 +216,15 @@ with open(args.input) as blast_taxon_coverage_file:
                         pass
             else:
                 taxon = tree.vertices[common_candidates.pop()]
+
+            while "uncultured" in taxon.name or "unidentified" in taxon.name or "synthetic" in taxon.name:
+                taxon = tree.vertices[taxon.source]
+            
             while taxon.name != "root":
                 tree.vertices[taxon.taxon].coverage += 1
                 taxon = tree.vertices[taxon.source]
             tree.vertices[taxon.taxon].coverage += 1
-
+            
 tree.add_unassigned()
 json = tree.recursive_depth_first_search(1, [], "")[1].replace("[,", "[").replace("},]", "}]").replace("'", "\\'").replace(", \"children\": []", "").strip(",")
 with open(args.output, 'w') as output_file:
