@@ -169,10 +169,13 @@ with open(args.input) as blast_taxon_coverage_file:
             elif taxon_data[0] == "N/A":
                 pass
             else:
-                taxon = int(taxon_data[0])
-                if int(taxon_data[0]) in merged:
-                    taxon = merged[int(taxon_data[0])]
-                parents.append(taxon)
+                taxon_data[0] = taxon_data[0].strip()
+                if len(taxon_data[0]) > 0:
+                    print(":"+taxon_data[0]+":")
+                    taxon = int(taxon_data[0])
+                    if int(taxon_data[0]) in merged:
+                        taxon = merged[int(taxon_data[0])]
+                    parents.append(taxon)
         
         i = 0
         while i < len(parents):
