@@ -40,3 +40,7 @@ The following commands are used to create the interactive visualizations based o
 `python3 keanu.py -db taxonomy.dat -md_db merged_deleted.dat -in input/sample_name.keanu.txt -view bilevel -out output/sample.bilevel.html`
 
 `python3 keanu.py -db taxonomy.dat -md_db merged_deleted.dat -in input/sample_name.keanu.txt -view tree -out output/sample.tree.html`
+
+## Citation
+
+The paper describing Keanu can be found [here](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-2629-4).
