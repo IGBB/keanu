@@ -9,6 +9,7 @@ parser.add_argument("-md_db", "--merged_deleted_database", help="Merged/deleted 
 parser.add_argument("-view", "--view", choices=["tree", "bilevel"], help="View choice")
 parser.add_argument("-in", "--input", help="Input data set")
 parser.add_argument("-out", "--output", help="Output HTML filename")
+parser.add_argument("-export", "--export", help="Export node/contig assignments to user-specified file")
 
 if len(sys.argv) == 1:
     parser.print_help(sys.stderr)
@@ -151,9 +152,11 @@ with open(args.merged_deleted_database) as deleted_data_file:
         else:
             merged[int(data[0])] = int(data[1])
 
+assignments = {}
 with open(args.input) as blast_taxon_coverage_file:
     annotated_lineage = ["root", "superkingdom", "kingdom", "phylum", "class", "order", "suborder", "family", "genus", "species"]
     for line in blast_taxon_coverage_file:
+        contig = line.strip("\n").split("\t")[0]
         if "," in line.strip("\n").split("\t")[1]:
             data = line.strip("\n").split("\t")[1].split(",")
         else:
@@ -171,7 +174,6 @@ with open(args.input) as blast_taxon_coverage_file:
             else:
                 taxon_data[0] = taxon_data[0].strip()
                 if len(taxon_data[0]) > 0:
-                    print(":"+taxon_data[0]+":")
                     taxon = int(taxon_data[0])
                     if int(taxon_data[0]) in merged:
                         taxon = merged[int(taxon_data[0])]
@@ -224,6 +226,9 @@ with open(args.input) as blast_taxon_coverage_file:
                 taxon = tree.vertices[taxon.source]
             
             while taxon.name != "root":
+                if taxon.name not in assignments:
+                    assignments[taxon.name] = []
+                assignments[taxon.name].append(contig)
                 tree.vertices[taxon.taxon].coverage += 1
                 taxon = tree.vertices[taxon.source]
             tree.vertices[taxon.taxon].coverage += 1
@@ -232,3 +237,10 @@ tree.add_unassigned()
 json = tree.recursive_depth_first_search(1, [], "")[1].replace("[,", "[").replace("},]", "}]").replace("'", "\\'").replace(", \"children\": []", "").strip(",")
 with open(args.output, 'w') as output_file:
     output_file.write(before_html+json+after_html)
+
+if args.export:
+    assignment_string = ""
+    for each in assignments:
+        assignment_string += each+"\t"+str(assignments[each])+"\n"
+    with open(args.export, 'w') as output_file:
+        output_file.write(assignment_string)
