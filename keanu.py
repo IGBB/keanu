@@ -200,47 +200,57 @@ with open(args.input) as blast_taxon_coverage_file:
         # print(parent_counts)
         if len(parent_counts) > 0:
             highest = sorted(parent_counts.values())[-2]
-            common_candidates = [k for k,v in parent_counts.items() if v == highest]
-            for i in range(0, len(common_candidates)):
-                each = common_candidates[i]
-                while tree.vertices[each].rank not in annotated_lineage and tree.vertices[each].name != "root":
-                    # print(each)
-                    each = tree.vertices[each].source
-                common_candidates[i] = each 
-            # print(common_candidates)
-            depth = -1
-            taxon = 0
-            common_candidates = set(common_candidates)
-            if len(common_candidates) > 1:
-                for each in common_candidates:
-                    try:
-                        if annotated_lineage.index(tree.vertices[each].rank) > depth:
-                            depth = annotated_lineage.index(tree.vertices[each].rank)
-                            taxon = tree.vertices[each]
-                    except:
-                        pass
-            else:
-                taxon = tree.vertices[common_candidates.pop()]
-
-            while "uncultured" in taxon.name or "unidentified" in taxon.name or "synthetic" in taxon.name:
-                taxon = tree.vertices[taxon.source]
-            
-            while taxon.name != "root":
-                if taxon.name not in assignments:
-                    assignments[taxon.name] = []
-                assignments[taxon.name].append(contig)
+            root = sorted(parent_counts.values())[-1]
+            if highest == 1 and root != 1:
+                sys.stderr.write(contig+" was assigned to root. Check your BLAST results for "+contig+", especially e-scores.\n")
+                common_candidates = set()
+                taxon = tree.vertices[1]
                 tree.vertices[taxon.taxon].coverage += 1
-                taxon = tree.vertices[taxon.source]
-            tree.vertices[taxon.taxon].coverage += 1
-            
+            else:
+                common_candidates = [k for k,v in parent_counts.items() if v == highest]
+                for i in range(0, len(common_candidates)):
+                    each = common_candidates[i]
+                    while tree.vertices[each].rank not in annotated_lineage and tree.vertices[each].name != "root":
+                        each = tree.vertices[each].source
+                    common_candidates[i] = each 
+                # print(common_candidates)
+                depth = -1
+                taxon = 0
+                common_candidates = set(common_candidates)
+                if len(common_candidates) > 1:
+                    for each in common_candidates:
+                        try:
+                            if annotated_lineage.index(tree.vertices[each].rank) > depth:
+                                depth = annotated_lineage.index(tree.vertices[each].rank)
+                                taxon = tree.vertices[each]
+                        except:
+                            pass
+                else:
+                    taxon = tree.vertices[common_candidates.pop()]
+
+                while "uncultured" in taxon.name or "unidentified" in taxon.name or "synthetic" in taxon.name:
+                    taxon = tree.vertices[taxon.source]
+                
+                while taxon.name != "root":
+                    if taxon.name not in assignments:
+                        assignments[taxon.name] = []
+                    assignments[taxon.name].append(contig)
+                    tree.vertices[taxon.taxon].coverage += 1
+                    taxon = tree.vertices[taxon.source]
+                tree.vertices[taxon.taxon].coverage += 1
+
+  
 tree.add_unassigned()
 json = tree.recursive_depth_first_search(1, [], "")[1].replace("[,", "[").replace("},]", "}]").replace("'", "\\'").replace(", \"children\": []", "").strip(",")
-with open(args.output, 'w') as output_file:
-    output_file.write(before_html+json+after_html)
+if json == "{\"name\": \"root (1)\", \"size\": \"1\"}":
+    sys.stderr.write("No assignments could be made besides to root node, and no output will be created. Check your BLAST results, especially e-scores.\n")
+else:
+    with open(args.output, 'w') as output_file:
+        output_file.write(before_html+json+after_html)
 
-if args.export:
-    assignment_string = ""
-    for each in assignments:
-        assignment_string += each+"\t"+str(assignments[each])+"\n"
-    with open(args.export, 'w') as output_file:
-        output_file.write(assignment_string)
+    if args.export:
+        assignment_string = ""
+        for each in assignments:
+            assignment_string += each+"\t"+str(assignments[each])+"\n"
+        with open(args.export, 'w') as output_file:
+            output_file.write(assignment_string)
