@@ -25,7 +25,7 @@ If the BLAST alignments have already been completed, the subject taxon ID can be
 ### Keanu
 
 #### Making the database
-The following command is used to create the `taxonomy.dat` and `merged_deleted.dat` databases necessary for running Keanu. There are no optional parameters. The input files - names.dmb, nodes.dmp, delnodes.dmp, and merged.dmp - come from the taxdmp file located [here](ftp://ftp.ncbi.nih.gov/pub/taxonomy)
+The following command is used to create the `taxonomy.dat` and `merged_deleted.dat` databases necessary for running Keanu. There are no optional parameters. The input files - names.dmb, nodes.dmp, delnodes.dmp, and merged.dmp - come from the taxdmp file located at the NCBI Taxonomy FTP site: ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/
 
 `python3 make_db.py -names names.dmp -nodes nodes.dmp -out_db taxonomy.dat -deleted delnodes.dmp -merged merged.dmp -out_md_db merged_deleted.dat`
 
