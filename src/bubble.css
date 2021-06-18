@@ -1,0 +1,91 @@
+* { font-family: sans }
+
+.highlight { font-weight: bold }
+
+circle,rect {
+    fill:white;
+    opacity: 0.3;
+    stroke: black;
+}
+
+circle.Other,
+rect.Other {
+    fill:grey;
+}
+
+circle.Unclassified,
+rect.Unclassified {
+    stroke: none;
+    fill: none;
+}
+
+circle.Bacteria,
+rect.Bacteria {
+    fill: #66BDFF;
+  stroke: white;
+}
+
+circle.Eukaryota,
+rect.Eukaryota {
+    fill: #948CFF;
+  stroke: white;
+}
+
+circle.Viruses,
+rect.Viruses {
+    fill: #EAC435;
+  stroke: white;
+}
+
+.tooltip {
+    position: absolute;
+}
+
+#legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+
+    padding: .5em 0;
+    position: sticky;
+    width: 100%;
+    background: white;
+    top:0;
+}
+
+#legend svg {
+}
+#legend div {
+    display: inline-flex;
+}
+
+#legend h3 {
+    margin: auto 0;
+}
+#legend h3 .sublabel{
+    font-size:.6em;
+    font-weight:normal;
+    margin:0 1em;
+    max-width: 150px;
+}
+
+#graph {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+div.graph {
+    margin: 1em;
+}
+
+div.graph h3 {
+    text-align: center;
+    margin:5px 0 0;
+}
+div.graph h4 {
+    text-align: center;
+    margin:0 0 5px;
+    color: grey;
+    font-size: .75em;
+}
