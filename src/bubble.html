@@ -1,0 +1,76 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <title>Contamination Report</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!--arg: (1) /string/ parsed JSON data -->
+        <script type="text/json" id="data">
+%s
+        </script>
+
+        <script src="https://d3js.org/d3.v6.min.js"></script>
+
+<!--arg: (2) /string/ CSS Style Sheet -->
+        <style type="text/css" media="screen">
+        %s
+        </style>
+
+<!--arg: (3) /string/ JavaScript to create graphs -->
+        <script type="text/javascript" >
+        %s
+        </script>
+
+
+
+    </head>
+    <body>
+        <div id="legend">
+            <!-- <div>
+                 <svg height="50" width="50">
+                 <circle cx="25" cy="25" r="20" class="Unclassified"/>
+                 </svg>
+                 <h3>Unclassified</h3>
+                 </div> -->
+            <div>
+                <svg height="50" width="50"><circle cx="25" cy="25" r="20" class="Other"/></svg>
+                <h3>Other
+                    <p class="sublabel" width="100">
+<!--arg: (4) /float/ classification cutoff -->
+                        (Classification with less than %.2f%% of total k-mers)
+                    </p>
+                </h3>
+            </div>
+            <div>
+                <svg height="50" width="50">
+                    <circle cx="25" cy="25" r="20" class="Bacteria"/>
+                </svg>
+                <h3>Bacteria</h3>
+            </div>
+            <div>
+                <svg height="50" width="50">
+                    <circle cx="25" cy="25" r="20" class="Eukaryota"/>
+                </svg>
+                <h3>Eukaryota</h3>
+            </div>
+            <div>
+                <svg height="50" width="50">
+                    <circle cx="25" cy="25" r="20" class="Viruses"/>
+                </svg>
+                <h3>Viruses</h3>
+            </div>
+            <div>
+                <svg height="50" width="50">
+                    <circle cx="25" cy="25" r="20" class=""/>
+                </svg>
+                <h3>Unknown</h3>
+            </div>
+        </div>
+        <div id="graph">
+
+        </div>
+        
+    </body>
+</html>

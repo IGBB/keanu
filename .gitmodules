@@ -1,0 +1,3 @@
+[submodule "lib/kraken2"]
+	path = lib/kraken2
+	url = https://github.com/DerrickWood/kraken2
